@@ -4,7 +4,7 @@
   "description": "propertygraph api",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "node index.js"
   },
   "author": "Mike Williamson",
@@ -26,5 +26,8 @@
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.7.1",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "verbose": true
   }
 }
