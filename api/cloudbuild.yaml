@@ -1,0 +1,11 @@
+steps:
+  - name: node:12-alpine
+    id: ci
+    dir: api
+    entrypoint: npm
+    args: ['ci']
+
+  - name: node:12-alpine
+    dir: api
+    entrypoint: npm
+    args: ['test']
