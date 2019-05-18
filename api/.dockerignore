@@ -1,0 +1,6 @@
+**
+!src
+!.env.example
+!index.js
+!package.json
+!package-lock.json
