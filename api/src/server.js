@@ -14,7 +14,7 @@ module.exports.Server = function(context = {}) {
     }),
   )
 
-  server.get('/', (req, res) => {
+  server.get('/', (_req, res) => {
     res.json({ ok: 'yes' })
   })
 
