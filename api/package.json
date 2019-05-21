@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
+    "lint": "eslint src/**",
     "start": "node index.js"
   },
   "author": "Mike Williamson",
