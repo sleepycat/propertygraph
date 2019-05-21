@@ -11,13 +11,16 @@ steps:
     entrypoint: npm
     args: ['test']
 
+    # Using debug image as workaround for
+    # `error building stage: open /etc/passwd: no such file or directory`
+    # https://github.com/GoogleContainerTools/kaniko/issues/477
   - name: gcr.io/kaniko-project/executor:debug
     id: build
     dir: api
     args:
-      - '--destination=gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA'
-      - '--destination=gcr.io/$PROJECT_ID/api:latest'
-      - '--dockerfile=./Dockerfile'
-      - '--reproducible'
-      - '--cache=true'
-      - '--cache-ttl=6h'
+      - --destination=gcr.io/$PROJECT_ID/api:$BRANCH_NAME-$SHORT_SHA
+      - --destination=gcr.io/$PROJECT_ID/api:latest
+      - --reproducible
+      - --context=/workspace/api
+      - --cache=true
+      - --cache-ttl=6h

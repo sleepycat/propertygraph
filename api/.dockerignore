@@ -1,6 +1,7 @@
-**
-!src
-!.env.example
-!index.js
-!package.json
-!package-lock.json
+node_modules
+README.md
+cloudbuild.yaml
+coverage
+**/*.test.js
+**/*/.env
+.git

@@ -4,10 +4,11 @@ LABEL maintainer="mike@korora.ca"
 ENV NODE_ENV production
 
 WORKDIR /app
-COPY . .
+COPY src ./src
+COPY index.js ./index.js
+COPY package* ./
 RUN npm ci
 
 USER node
 EXPOSE 3000
 CMD ["npm",  "start"]
-
