@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --coverage",
     "lint": "eslint src/**",
+    "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "start": "node index.js"
   },
   "author": "Mike Williamson",
@@ -13,7 +14,8 @@
   "dependencies": {
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
-    "graphql": "^14.2.1"
+    "graphql": "^14.2.1",
+    "graphql-upload": "^8.0.6"
   },
   "devDependencies": {
     "acorn": "^6.1.1",
