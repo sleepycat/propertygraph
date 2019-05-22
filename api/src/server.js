@@ -1,5 +1,6 @@
 const express = require('express')
 const graphqlHTTP = require('express-graphql')
+const { graphqlUploadExpress } = require('graphql-upload')
 const { schema } = require('./schema')
 
 module.exports.Server = function(context = {}) {
@@ -7,6 +8,7 @@ module.exports.Server = function(context = {}) {
 
   server.use(
     '/graphql',
+    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
     graphqlHTTP({
       schema,
       graphiql: true,
