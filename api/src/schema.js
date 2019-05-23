@@ -1,4 +1,9 @@
-var { GraphQLObjectType, GraphQLString, GraphQLSchema } = require('graphql')
+var {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLString,
+  GraphQLSchema,
+} = require('graphql')
 const { GraphQLUpload } = require('graphql-upload')
 
 // eslint-disable-next-line
@@ -27,20 +32,47 @@ const mutation = new GraphQLObjectType({
       description: 'Saves an email',
       type: GraphQLString,
       args: {
+        sender: {
+          description: 'the subject of the email',
+          type: GraphQLString,
+        },
+        recipients: {
+          description: 'the subject of the email',
+          type: new GraphQLList(GraphQLString),
+        },
+        subject: {
+          description: 'the subject of the email',
+          type: GraphQLString,
+        },
+        html: {
+          description: 'the HTML version of the body of the email',
+          type: GraphQLString,
+        },
+        text: {
+          description: 'the HTML version of the body of the email',
+          type: GraphQLString,
+        },
         attachment: {
           description: 'Email attachment',
           type: GraphQLUpload,
         },
       },
-      async resolve(_root, { attachment }) {
+      async resolve(_root, args) {
+        const { sender, recipients, subject, text, attachment } = args
         const {
           filename,
           _mimetype,
           _encoding,
           createReadStream,
         } = await attachment
+
         const _stream = createReadStream()
         // console.log(await streamToString(stream))
+        console.log('sender: ', sender)
+        console.log('recipients: ', recipients)
+        console.log('subject: ', subject)
+        console.log('text: ', text)
+        console.log('attached file: ', filename)
         return filename
       },
     },
