@@ -57,8 +57,11 @@ const mutation = new GraphQLObjectType({
           type: GraphQLUpload,
         },
       },
-      async resolve(_root, args) {
-        const { sender, recipients, subject, text, attachment } = args
+      async resolve(_root, args, { query }) {
+        let { attachment, ...email } = args
+
+        await query` INSERT ${email} INTO emails`
+
         const {
           filename,
           _mimetype,
@@ -68,11 +71,6 @@ const mutation = new GraphQLObjectType({
 
         const _stream = createReadStream()
         // console.log(await streamToString(stream))
-        console.log('sender: ', sender)
-        console.log('recipients: ', recipients)
-        console.log('subject: ', subject)
-        console.log('text: ', text)
-        console.log('attached file: ', filename)
         return filename
       },
     },
