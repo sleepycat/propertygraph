@@ -58,7 +58,7 @@ const mutation = new GraphQLObjectType({
         },
       },
       async resolve(_root, args, { query }) {
-        let { attachment, ...email } = args
+        const { attachment, ...email } = args
 
         await query` INSERT ${email} INTO emails`
 
