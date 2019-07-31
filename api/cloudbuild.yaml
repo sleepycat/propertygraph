@@ -1,12 +1,19 @@
 steps:
   - name: gcr.io/cloud-builders/docker
     id: start_arangodb
+    entrypoint: /bin/sh
     args: [
-        "run", "-d", "--network=cloudbuild", "-e ARANGO_ROOT_PASSWORD=$_DB_PASSWORD", "--name=arangodb", "arangodb"
+        '-c',
+        'docker run -d --network=cloudbuild -p=8529:8529 --name=arangodb -e ARANGO_ROOT_PASSWORD=$_DB_PASSWORD arangodb',
       ]
 
-  - name: jwilder/dockerize:0.6.1
-    args: ['dockerize', '-timeout=30s', '-wait=tcp://arangodb:8529']
+  - name: alpine
+    id: wait
+    entrypoint: /bin/sh
+    args: [
+        '-c',
+        '/workspace/wait-for arangodb:8529',
+      ]
 
   - name: node:12-alpine
     id: ci
@@ -20,8 +27,8 @@ steps:
     entrypoint: npm
     args: ['test']
     env:
-      - 'PROPERTYGRAPH_TEST_DB_URL=$_TEST_DB_URL'
-      - 'PROPERTYGRAPH_DB_PASSWORD=$_DB_PASSWORD'
+      - PROPERTYGRAPH_TEST_DB_URL=$_PROPERTYGRAPH_TEST_DB_URL
+      - PROPERTYGRAPH_DB_PASSWORD=$_DB_PASSWORD
 
     # Using debug image as workaround for
     # `error building stage: open /etc/passwd: no such file or directory`
@@ -36,6 +43,3 @@ steps:
       - --context=/workspace/api
       - --cache=true
       - --cache-ttl=6h
-
-  - name: gcr.io/cloud-builders/docker
-    args: ['rm', '--force', 'arangodb']

@@ -1,50 +1,55 @@
+const { parse } = require('path')
 const request = require('supertest')
-const { ArangoTools, dbNameFromFile } = require('arango-tools')
+const { Database, aql } = require('arangojs')
 const fs = require('fs')
 const { Server } = require('../server')
 
-let name = dbNameFromFile(__filename)
+const generateName = () =>
+  parse(__filename).base.replace(/\./g, '_') + '_' + Date.now()
 
 const {
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
   PROPERTYGRAPH_TEST_DB_URL: url,
 } = process.env
 
-let query, truncate, drop
+let sys
 
 describe('parse server', () => {
-  beforeAll(async () => {
-    let { migrate } = await ArangoTools({
-      rootPass,
-      url,
-    })
-
-    ;({ query, truncate, drop } = await migrate([
-      {
-        type: 'database',
-        databaseName: name,
-        users: [{ username: 'root', passwd: rootPass }],
-      },
-      {
-        type: 'documentcollection',
-        databaseName: name,
-        name: 'emails',
-      },
-    ]))
+  beforeEach(async () => {
+    sys = new Database({ url })
+    sys.useDatabase('_system')
+    sys.useBasicAuth('root', rootPass)
   })
-
-  afterAll(async () => await drop()) // eslint-disable-line
-  afterEach(async () => await truncate()) // eslint-disable-line
 
   describe('/', () => {
     it('handles a post request', async () => {
+      let name = generateName()
+      await sys.createDatabase(name)
+      let db = new Database({ url })
+      db.useDatabase(name)
+      db.useBasicAuth('root', rootPass)
+      let emails = db.collection('emails')
+      await emails.create()
+
+      let query = (strings, ...vars) => db.query(aql(strings, ...vars))
+
       const response = await request(Server({ query })).get('/')
       expect(response.body).toEqual({ ok: 'yes' })
+      await sys.dropDatabase(name)
     })
   })
 
   describe('/graphql', () => {
     it('saves an email with an attachment', async () => {
+      let name = generateName()
+      await sys.createDatabase(name)
+      let db = new Database({ url })
+      db.useDatabase(name)
+      db.useBasicAuth('root', rootPass)
+      let emails = db.collection('emails')
+      await emails.create()
+
+      let query = (strings, ...vars) => db.query(aql(strings, ...vars))
       let app = await Server({ query })
 
       let response = await request(app)
@@ -91,6 +96,8 @@ describe('parse server', () => {
       expect(response.body).toEqual({
         data: { saveEmail: 'kitten.jpg' },
       })
+
+      await sys.dropDatabase(name)
     })
   })
 })
