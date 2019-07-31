@@ -23,15 +23,15 @@ describe('parse server', () => {
 
   describe('/', () => {
     it('handles a post request', async () => {
-      let name = generateName()
+      const name = generateName()
       await sys.createDatabase(name)
-      let db = new Database({ url })
+      const db = new Database({ url })
       db.useDatabase(name)
       db.useBasicAuth('root', rootPass)
-      let emails = db.collection('emails')
+      const emails = db.collection('emails')
       await emails.create()
 
-      let query = (strings, ...vars) => db.query(aql(strings, ...vars))
+      const query = (strings, ...vars) => db.query(aql(strings, ...vars))
 
       const response = await request(Server({ query })).get('/')
       expect(response.body).toEqual({ ok: 'yes' })
@@ -41,18 +41,18 @@ describe('parse server', () => {
 
   describe('/graphql', () => {
     it('saves an email with an attachment', async () => {
-      let name = generateName()
+      const name = generateName()
       await sys.createDatabase(name)
-      let db = new Database({ url })
+      const db = new Database({ url })
       db.useDatabase(name)
       db.useBasicAuth('root', rootPass)
-      let emails = db.collection('emails')
+      const emails = db.collection('emails')
       await emails.create()
 
-      let query = (strings, ...vars) => db.query(aql(strings, ...vars))
-      let app = await Server({ query })
+      const query = (strings, ...vars) => db.query(aql(strings, ...vars))
+      const app = await Server({ query })
 
-      let response = await request(app)
+      const response = await request(app)
         .post('/graphql')
         .field(
           'operations',
@@ -88,8 +88,8 @@ describe('parse server', () => {
         .field('map', '{ "0": ["variables.attachment"] }')
         .field('0', fs.createReadStream('./src/__tests__/testData/kitten.jpg'))
 
-      let results = await query`RETURN COUNT(emails)`
-      let [count] = await results.all()
+      const results = await query`RETURN COUNT(emails)`
+      const [count] = await results.all()
 
       expect(count).toEqual(1)
 
