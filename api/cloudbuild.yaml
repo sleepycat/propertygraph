@@ -2,18 +2,15 @@ steps:
   - name: gcr.io/cloud-builders/docker
     id: start_arangodb
     entrypoint: /bin/sh
-    args: [
+    args:
+      [
         '-c',
         'docker run -d --network=cloudbuild -p=8529:8529 --name=arangodb -e ARANGO_ROOT_PASSWORD=$_DB_PASSWORD arangodb',
       ]
 
-  - name: alpine
+  - name: mikewilliamson/wait-for
     id: wait
-    entrypoint: /bin/sh
-    args: [
-        '-c',
-        '/workspace/wait-for arangodb:8529',
-      ]
+    args: ['arangodb:8529']
 
   - name: node:12-alpine
     id: ci
@@ -30,10 +27,7 @@ steps:
       - PROPERTYGRAPH_TEST_DB_URL=$_PROPERTYGRAPH_TEST_DB_URL
       - PROPERTYGRAPH_DB_PASSWORD=$_DB_PASSWORD
 
-    # Using debug image as workaround for
-    # `error building stage: open /etc/passwd: no such file or directory`
-    # https://github.com/GoogleContainerTools/kaniko/issues/477
-  - name: gcr.io/kaniko-project/executor:debug
+  - name: gcr.io/kaniko-project/executor
     id: build
     dir: api
     args:
