@@ -8,51 +8,69 @@ const {
   PROPERTYGRAPH_TEST_DB_URL: url,
 } = process.env
 
+const makeMigrations = databaseName => [
+  {
+    type: 'database',
+    databaseName,
+    users: [{ username: 'root', passwd: rootPass }],
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'emails',
+  },
+  {
+    type: 'documentcollection',
+    databaseName,
+    name: 'people',
+  },
+]
+
 describe('parse server', () => {
   describe('/', () => {
-    it('handles a post request', async () => {
-      const name = dbNameFromFile(__filename)
-      const migrations = [
-        {
-          type: 'database',
-          databaseName: name,
-          users: [{ username: 'root', passwd: rootPass }],
-        },
-        {
-          type: 'documentcollection',
-          databaseName: name,
-          name: 'emails',
-        },
-      ]
-      const { migrate } = await ArangoTools({ rootPass, url })
-      const { query, drop } = await migrate(migrations)
+    let query, drop, truncate, migrate
 
-      const response = await request(Server({ query })).get('/')
-      expect(response.body).toEqual({ ok: 'yes' })
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate } = await migrate(
+        makeMigrations(dbNameFromFile(__filename)),
+      ))
+    })
 
+    beforeEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
       await drop()
+    })
+
+    it('handles a post request', async () => {
+      const response = await request(Server({ query })).get('/')
+
+      expect(response.body).toEqual({ ok: 'yes' })
     })
   })
 
   describe('/graphql', () => {
+    let query, drop, truncate, migrate
+
+    beforeAll(async () => {
+      ;({ migrate } = await ArangoTools({ rootPass, url }))
+      ;({ query, drop, truncate } = await migrate(
+        makeMigrations(dbNameFromFile(__filename)),
+      ))
+    })
+
+    beforeEach(async () => {
+      await truncate()
+    })
+
+    afterAll(async () => {
+      await drop()
+    })
+
     it('saves an email with an attachment', async () => {
-      const name = dbNameFromFile(__filename)
-      const migrations = [
-        {
-          type: 'database',
-          databaseName: name,
-          users: [{ username: 'root', passwd: rootPass }],
-        },
-        {
-          type: 'documentcollection',
-          databaseName: name,
-          name: 'emails',
-        },
-      ]
-
-      const { migrate } = await ArangoTools({ rootPass, url })
-			const { query, drop } = await migrate(migrations)
-
       const app = await Server({ query })
 
       const response = await request(app)
@@ -100,7 +118,6 @@ describe('parse server', () => {
         data: { saveEmail: 'kitten.jpg' },
       })
 
-      await drop()
     })
   })
 })
