@@ -1,55 +1,58 @@
-const { parse } = require('path')
+const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const request = require('supertest')
-const { Database, aql } = require('arangojs')
 const fs = require('fs')
 const { Server } = require('../server')
-
-const generateName = () =>
-  parse(__filename).base.replace(/\./g, '_') + '_' + Date.now()
 
 const {
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
   PROPERTYGRAPH_TEST_DB_URL: url,
 } = process.env
 
-let sys
-
 describe('parse server', () => {
-  beforeEach(async () => {
-    sys = new Database({ url })
-    sys.useDatabase('_system')
-    sys.useBasicAuth('root', rootPass)
-  })
-
   describe('/', () => {
     it('handles a post request', async () => {
-      const name = generateName()
-      await sys.createDatabase(name)
-      const db = new Database({ url })
-      db.useDatabase(name)
-      db.useBasicAuth('root', rootPass)
-      const emails = db.collection('emails')
-      await emails.create()
-
-      const query = (strings, ...vars) => db.query(aql(strings, ...vars))
+      const name = dbNameFromFile(__filename)
+      const migrations = [
+        {
+          type: 'database',
+          databaseName: name,
+          users: [{ username: 'root', passwd: rootPass }],
+        },
+        {
+          type: 'documentcollection',
+          databaseName: name,
+          name: 'emails',
+        },
+      ]
+      const { migrate } = await ArangoTools({ rootPass, url })
+      const { query, drop } = await migrate(migrations)
 
       const response = await request(Server({ query })).get('/')
       expect(response.body).toEqual({ ok: 'yes' })
-      await sys.dropDatabase(name)
+
+      await drop()
     })
   })
 
   describe('/graphql', () => {
     it('saves an email with an attachment', async () => {
-      const name = generateName()
-      await sys.createDatabase(name)
-      const db = new Database({ url })
-      db.useDatabase(name)
-      db.useBasicAuth('root', rootPass)
-      const emails = db.collection('emails')
-      await emails.create()
+      const name = dbNameFromFile(__filename)
+      const migrations = [
+        {
+          type: 'database',
+          databaseName: name,
+          users: [{ username: 'root', passwd: rootPass }],
+        },
+        {
+          type: 'documentcollection',
+          databaseName: name,
+          name: 'emails',
+        },
+      ]
 
-      const query = (strings, ...vars) => db.query(aql(strings, ...vars))
+      const { migrate } = await ArangoTools({ rootPass, url })
+			const { query, drop } = await migrate(migrations)
+
       const app = await Server({ query })
 
       const response = await request(app)
@@ -97,7 +100,7 @@ describe('parse server', () => {
         data: { saveEmail: 'kitten.jpg' },
       })
 
-      await sys.dropDatabase(name)
+      await drop()
     })
   })
 })
