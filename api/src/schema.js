@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 var {
   GraphQLObjectType,
   GraphQLList,
@@ -5,6 +6,19 @@ var {
   GraphQLSchema,
 } = require('graphql')
 const { GraphQLUpload } = require('graphql-upload')
+
+const sha256Stream = stream => {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash('sha256')
+
+    hash.on('readable', () => {
+      const data = hash.read()
+      if (data) resolve(data.toString('hex'))
+    })
+    hash.on('error', reject)
+    stream.pipe(hash)
+  })
+}
 
 // eslint-disable-next-line
 const streamToString = stream =>
@@ -58,9 +72,38 @@ const mutation = new GraphQLObjectType({
         },
       },
       async resolve(_root, args, { query }) {
-        const { attachment, ...email } = args
+        const { attachment, sender, recipients, ...email } = args
 
-        await query` INSERT ${email} INTO emails`
+        const savedSenderResponse = await query`
+					UPSERT {address: ${sender}}
+						INSERT {address: ${sender}}
+						UPDATE {address: ${sender}}
+						IN emailAddresses
+						RETURN NEW
+				`
+        const savedSender = await savedSenderResponse.next()
+
+        const response = await query`INSERT ${email} INTO emailContents RETURN NEW`
+        const savedEmail = await response.next()
+
+        for (const recipient of recipients) {
+          const savedRecipientResponse = await query`
+					UPSERT {address: ${recipient}}
+						INSERT {address: ${recipient}}
+						UPDATE {address: ${recipient}}
+						IN emailAddresses
+						RETURN NEW
+				`
+          const savedRecipient = await savedRecipientResponse.next()
+
+          try {
+            await query`INSERT {_from: ${savedSender._id}, _to: ${
+              savedRecipient._id
+            }, content: ${savedEmail._id}} INTO communications`
+          } catch (e) {
+            console.log('saving communication edge failed: ', e.message)
+          }
+        }
 
         const {
           filename,
@@ -69,13 +112,16 @@ const mutation = new GraphQLObjectType({
           createReadStream,
         } = await attachment
 
-        const _stream = createReadStream()
-        // console.log(await streamToString(stream))
+        try {
+          console.log(await sha256Stream(createReadStream()))
+        } catch (e) {
+          console.error('hashing failed!', e.message)
+        }
+
         return filename
       },
     },
   }),
 })
 
-var schema = new GraphQLSchema({ query, mutation })
-module.exports.schema = schema
+module.exports.schema = new GraphQLSchema({ query, mutation })
