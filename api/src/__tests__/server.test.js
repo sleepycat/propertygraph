@@ -17,12 +17,17 @@ const makeMigrations = databaseName => [
   {
     type: 'documentcollection',
     databaseName,
-    name: 'emails',
+    name: 'emailAddresses',
   },
   {
     type: 'documentcollection',
     databaseName,
-    name: 'people',
+    name: 'emailContents',
+  },
+  {
+    type: 'edgecollection',
+    databaseName,
+    name: 'communications',
   },
 ]
 
@@ -66,10 +71,6 @@ describe('parse server', () => {
       await truncate()
     })
 
-    afterAll(async () => {
-      await drop()
-    })
-
     it('saves an email with an attachment', async () => {
       const app = await Server({ query })
 
@@ -109,7 +110,9 @@ describe('parse server', () => {
         .field('map', '{ "0": ["variables.attachment"] }')
         .field('0', fs.createReadStream('./src/__tests__/testData/kitten.jpg'))
 
-      const results = await query`RETURN COUNT(emails)`
+      const results = await query`
+				  RETURN COUNT(emailContents)
+				`
       const [count] = await results.all()
 
       expect(count).toEqual(1)
@@ -117,7 +120,8 @@ describe('parse server', () => {
       expect(response.body).toEqual({
         data: { saveEmail: 'kitten.jpg' },
       })
-
+      // drop our test db
+      await drop()
     })
   })
 })
