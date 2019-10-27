@@ -11,9 +11,8 @@ build:
       - '**/*.js'
       - '**/*.css'
 deploy:
-  kubectl:
-    manifests:
-    - platform/deployment.yaml
+  kustomize:
+    path: platform/overlays/minikube
 portForward:
 - resourceType: deployment
   resourceName: create-react-app
