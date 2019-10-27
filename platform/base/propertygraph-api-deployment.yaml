@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: propertygraph-api
+  name: propertygraph-api
+  namespace: propertygraph-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: propertygraph-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: propertygraph-api
+    spec:
+      containers:
+      - image: gcr.io/propertygraph/api
+        name: api
+        resources: {}
+status: {}
