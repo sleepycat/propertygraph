@@ -1,1 +1,1 @@
-/* eslint-disable */module.exports={localeData:{"plurals":function(n,ord){if(ord)return n==1?"one":"other";return n>=0&&n<2?"one":"other"}},messages:{"Edit <0>src/App.js</0> and save to reload.":"Editez <0>src/App.js</0> et sauvegardez pour recharger.","Learn React":"Apprendre React","logo":"logo"}};
+/* eslint-disable */module.exports={localeData:{"plurals":function(n,ord){if(ord)return n==1?"one":"other";return n>=0&&n<2?"one":"other"}},messages:{"Hello from React":"Bonjour de React"}};
