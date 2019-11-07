@@ -1,0 +1,22 @@
+steps:
+
+  - name: node:13-alpine
+    id: install
+    dir: frontend
+    entrypoint: npm
+    args: ['ci']
+
+  - name: node:13-alpine
+    id: test
+    dir: api
+    entrypoint: npm
+    args: ['test']
+    env:
+
+  - name: gcr.io/kaniko-project/executor
+    id: build
+    dir: frontend
+    args:
+      - --destination=gcr.io/$PROJECT_ID/frontend:$BRANCH_NAME-$SHORT_SHA
+      - --destination=gcr.io/$PROJECT_ID/frontend:latest
+      - --reproducible
