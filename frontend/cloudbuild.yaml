@@ -8,7 +8,7 @@ steps:
 
   - name: node:13-alpine
     id: test
-    dir: api
+    dir: frontend
     entrypoint: npm
     args: ['test']
     env:
