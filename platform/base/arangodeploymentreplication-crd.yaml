@@ -1,0 +1,30 @@
+# Source: kube-arangodb-crd/templates/deployment-replications.yaml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+    name: arangodeploymentreplications.replication.database.arangodb.com
+    labels:
+        app.kubernetes.io/name: kube-arangodb-crd
+        helm.sh/chart: kube-arangodb-crd-0.4.2
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/instance: crd
+        release: crd
+spec:
+    group: replication.database.arangodb.com
+    names:
+        kind: ArangoDeploymentReplication
+        listKind: ArangoDeploymentReplicationList
+        plural: arangodeploymentreplications
+        shortNames:
+            - arangorepl
+        singular: arangodeploymentreplication
+    scope: Namespaced
+    version: v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha
+        served: true
+        storage: false
+
