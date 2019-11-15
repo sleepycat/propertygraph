@@ -13,23 +13,23 @@
   "license": "MIT",
   "dependencies": {
     "arango-tools": "0.0.6",
-    "arangojs": "^6.10.0",
+    "arangojs": "^6.12.0",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
-    "graphql": "^14.4.2",
-    "graphql-upload": "^8.0.7"
+    "graphql": "^14.5.8",
+    "graphql-upload": "^8.1.0"
   },
   "devDependencies": {
-    "acorn": "^6.2.1",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-config-standard": "^13.0.1",
+    "acorn": "^7.1.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jest": "^22.14.0",
-    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-jest": "^23.0.4",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "jest": "^24.8.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^24.9.0",
     "supertest": "^4.0.2"
   },
   "jest": {
