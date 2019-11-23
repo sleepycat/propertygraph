@@ -1,5 +1,7 @@
+const {Corporation} = require( './types/Corporation')
 const crypto = require('crypto')
-var {
+const {
+  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLList,
   GraphQLString,
@@ -32,10 +34,15 @@ const streamToString = stream =>
       .on('end', () => resolve(data))
   })
 
-var query = new GraphQLObjectType({
+
+const query = new GraphQLObjectType({
   name: 'Query',
   fields: {
-    hello: { type: GraphQLString, resolve: () => 'world' },
+    corporation: {
+      type: Corporation,
+      args: { operatingName: { type: GraphQLNonNull(GraphQLString) } },
+      resolve: () => ({ address: '100 Bruyere St' }),
+    },
   },
 })
 
@@ -97,9 +104,7 @@ const mutation = new GraphQLObjectType({
           const savedRecipient = await savedRecipientResponse.next()
 
           try {
-            await query`INSERT {_from: ${savedSender._id}, _to: ${
-              savedRecipient._id
-            }, content: ${savedEmail._id}} INTO communications`
+            await query`INSERT {_from: ${savedSender._id}, _to: ${savedRecipient._id}, content: ${savedEmail._id}} INTO communications`
           } catch (e) {
             console.log('saving communication edge failed: ', e.message)
           }
