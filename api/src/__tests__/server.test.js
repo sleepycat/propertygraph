@@ -2,34 +2,12 @@ const { ArangoTools, dbNameFromFile } = require('arango-tools')
 const request = require('supertest')
 const fs = require('fs')
 const { Server } = require('../server')
+const { makeMigrations } = require('../../migrations')
 
 const {
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
   PROPERTYGRAPH_TEST_DB_URL: url,
 } = process.env
-
-const makeMigrations = databaseName => [
-  {
-    type: 'database',
-    databaseName,
-    users: [{ username: 'root', passwd: rootPass }],
-  },
-  {
-    type: 'documentcollection',
-    databaseName,
-    name: 'emailAddresses',
-  },
-  {
-    type: 'documentcollection',
-    databaseName,
-    name: 'emailContents',
-  },
-  {
-    type: 'edgecollection',
-    databaseName,
-    name: 'communications',
-  },
-]
 
 describe('parse server', () => {
   describe('/', () => {
@@ -38,7 +16,7 @@ describe('parse server', () => {
     beforeAll(async () => {
       ;({ migrate } = await ArangoTools({ rootPass, url }))
       ;({ query, drop, truncate } = await migrate(
-        makeMigrations(dbNameFromFile(__filename)),
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
       ))
     })
 
@@ -63,7 +41,7 @@ describe('parse server', () => {
     beforeAll(async () => {
       ;({ migrate } = await ArangoTools({ rootPass, url }))
       ;({ query, drop, truncate } = await migrate(
-        makeMigrations(dbNameFromFile(__filename)),
+        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
       ))
     })
 
