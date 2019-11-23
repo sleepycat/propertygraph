@@ -1,37 +1,17 @@
 const { ArangoTools } = require('arango-tools')
 const { Server } = require('./src/server')
+const { makeMigrations } = require('./migrations')
 const {
   PORT = 3000,
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
   PROPERTYGRAPH_TEST_DB_URL: url,
 } = process.env
 
-const databaseName = 'propertygraph'
-
 ;(async () => {
   const { migrate } = await ArangoTools({ rootPass, url })
-  const { query } = await migrate([
-    {
-      type: 'database',
-      databaseName,
-      users: [{ username: 'root', passwd: rootPass }],
-    },
-    {
-      type: 'documentcollection',
-      databaseName,
-      name: 'emailAddresses',
-    },
-    {
-      type: 'documentcollection',
-      databaseName,
-      name: 'emailContents',
-    },
-    {
-      type: 'edgecollection',
-      databaseName,
-      name: 'communications',
-    },
-  ])
+  const { query } = await migrate(
+    makeMigrations({ databaseName: 'propertygraph', rootPass }),
+  )
 
   Server({ query }).listen(PORT, err => {
     if (err) throw err

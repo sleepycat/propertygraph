@@ -41,7 +41,14 @@ const query = new GraphQLObjectType({
     corporation: {
       type: Corporation,
       args: { operatingName: { type: GraphQLNonNull(GraphQLString) } },
-      resolve: () => ({ address: '100 Bruyere St' }),
+			resolve: async (_root, {operatingName}, {query}) => {
+				const cursor = await query`
+				  FOR corporation in corporations
+					  FILTER corporation.operatingName == ${operatingName}
+						  RETURN corporation
+				`
+				return cursor.next()
+			},
     },
   },
 })
