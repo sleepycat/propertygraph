@@ -1,5 +1,7 @@
+const {Corporation} = require( './types/Corporation')
 const crypto = require('crypto')
-var {
+const {
+  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLList,
   GraphQLString,
@@ -32,10 +34,15 @@ const streamToString = stream =>
       .on('end', () => resolve(data))
   })
 
-var query = new GraphQLObjectType({
+
+const query = new GraphQLObjectType({
   name: 'Query',
   fields: {
-    hello: { type: GraphQLString, resolve: () => 'world' },
+    corporation: {
+      type: Corporation,
+      args: { operatingName: { type: GraphQLNonNull(GraphQLString) } },
+      resolve: () => ({ address: '100 Bruyere St' }),
+    },
   },
 })
 

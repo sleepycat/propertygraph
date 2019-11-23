@@ -1,13 +1,25 @@
-const {graphql} = require('graphql')
+const { graphql } = require('graphql')
 const { schema } = require('../schema')
 
 describe('schema', () => {
-  describe('Query.hello', () => {
-    it('greets the world', async () => {
-      const response = await graphql(schema, '{hello}')
+  describe('Query.corporation', () => {
+    describe('given an operating name', () => {
+      it('returns the corporations address', async () => {
+        const response = await graphql(
+          schema,
+          `
+            {
+              corporation(operatingName: "CCC364") {
+                address
+              }
+            }
+          `,
+        )
 
-      expect(response.data).toEqual({ hello: 'world' })
+        expect(response).toEqual({
+          data: { corporation: { address: '100 Bruyere St' } },
+        })
+      })
     })
   })
 })
-
