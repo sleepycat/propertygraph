@@ -118,7 +118,7 @@ describe('parse server', () => {
       expect(count).toEqual(1)
 
       expect(response.body).toEqual({
-        data: { saveEmail: 'kitten.jpg' },
+        data: { saveEmail: 'saved' },
       })
       // drop our test db
       await drop()

@@ -97,28 +97,28 @@ const mutation = new GraphQLObjectType({
           const savedRecipient = await savedRecipientResponse.next()
 
           try {
-            await query`INSERT {_from: ${savedSender._id}, _to: ${
-              savedRecipient._id
-            }, content: ${savedEmail._id}} INTO communications`
+            await query`INSERT {_from: ${savedSender._id}, _to: ${savedRecipient._id}, content: ${savedEmail._id}} INTO communications`
           } catch (e) {
             console.log('saving communication edge failed: ', e.message)
           }
         }
 
-        const {
-          filename,
-          _mimetype,
-          _encoding,
-          createReadStream,
-        } = await attachment
+        if (attachment) {
+          const {
+            filename,
+            _mimetype,
+            _encoding,
+            createReadStream,
+          } = await attachment
 
-        try {
-          console.log(await sha256Stream(createReadStream()))
-        } catch (e) {
-          console.error('hashing failed!', e.message)
+          try {
+            console.log(filename, ':', await sha256Stream(createReadStream()))
+          } catch (e) {
+            console.error('hashing failed!', e.message)
+          }
         }
 
-        return filename
+        return 'saved'
       },
     },
   }),
