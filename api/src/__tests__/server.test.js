@@ -10,32 +10,23 @@ const {
 } = process.env
 
 describe('parse server', () => {
-  describe('/', () => {
-    let query, drop, truncate, migrate
+  describe('/alive', () => {
+    it('responds with a 200', async () => {
+      const response = await request(Server({ query: jest.fn() })).get('/alive')
 
-    beforeAll(async () => {
-      ;({ migrate } = await ArangoTools({ rootPass, url }))
-      ;({ query, drop, truncate } = await migrate(
-        makeMigrations({ databaseName: dbNameFromFile(__filename), rootPass }),
-      ))
-    })
-
-    beforeEach(async () => {
-      await truncate()
-    })
-
-    afterAll(async () => {
-      await drop()
-    })
-
-    it('handles a post request', async () => {
-      const response = await request(Server({ query })).get('/')
-
-      expect(response.body).toEqual({ ok: 'yes' })
+      expect(response.status).toEqual(200)
     })
   })
 
-  describe('/graphql', () => {
+  describe('/ready', () => {
+    it('returns 200', async () => {
+      const response = await request(Server({ query: jest.fn() })).get('/ready')
+
+      expect(response.status).toEqual(200)
+    })
+  })
+
+  describe('/', () => {
     let query, drop, truncate, migrate
 
     beforeAll(async () => {
@@ -53,7 +44,7 @@ describe('parse server', () => {
       const app = await Server({ query })
 
       const response = await request(app)
-        .post('/graphql')
+        .post('/')
         .field(
           'operations',
           JSON.stringify({
