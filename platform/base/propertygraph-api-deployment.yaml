@@ -5,7 +5,6 @@ metadata:
   labels:
     app: propertygraph-api
   name: propertygraph-api
-  namespace: propertygraph-api
 spec:
   replicas: 1
   selector:
@@ -21,5 +20,13 @@ spec:
       containers:
       - image: gcr.io/propertygraph/api
         name: api
+        env:
+        - name: PROPERTYGRAPH_DB_URL
+          value: http://arangodb:8529
+        - name: PROPERTYGRAPH_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: PROPERTYGRAPH_DB_PASSWORD
+              name: arango-secrets
         resources: {}
 status: {}

@@ -6,7 +6,8 @@ resources:
 - arango-storage.yaml
 - frontend-deployment.yaml
 - propertygraph-api-deployment.yaml
-- propertygraph-api-ns.yaml
 - istio-gateway.yaml
 - frontend-virtual-service.yaml
+- api-virtual-service.yaml
 - propertygraph-frontend-service.yaml
+- propertygraph-api-service.yaml
