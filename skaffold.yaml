@@ -1,11 +1,17 @@
 apiVersion: skaffold/v1beta15
 kind: Config
 metadata:
-  name: skaffold-create-react-app
+  name: propertygraph
 build:
   artifacts:
-  - image: skaffold-create-react-app
+  - image: gcr.io/propertygraph/frontend
     context: frontend
+    sync:
+      infer:
+      - '**/*.js'
+      - '**/*.css'
+  - image: gcr.io/propertygraph/api
+    context: api
     sync:
       infer:
       - '**/*.js'
@@ -14,6 +20,8 @@ deploy:
   kustomize:
     path: platform/overlays/minikube
 portForward:
-- resourceType: deployment
-  resourceName: create-react-app
-  port: 3000
+- resourceType: service
+  resourceName: istio-ingressgateway
+  namespace: istio-system
+  port: 80
+  hostPort: 3000

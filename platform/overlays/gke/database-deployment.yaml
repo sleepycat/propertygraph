@@ -4,7 +4,7 @@ metadata:
   name: "arangodb"
 spec:
   image: arangodb/arangodb:3.5.2
-  environment: Development
+  environment: Production
   mode: Single
   tls:
     caSecretName: None
