@@ -1,17 +1,29 @@
-import * as React from "react"
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core'
+import { useLingui } from '@lingui/react'
+import { activate } from './i18n.config'
 
-import { locales, activate } from "./i18n.config"
+const createButton = lang => (
+  <button
+    css={css`
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1em;
+    `}
+    onClick={() => {
+      if (lang === 'en') {
+        activate('fr')
+      } else {
+        activate('en')
+      }
+    }}
+  >
+    {lang === 'en' ? 'Français' : 'English'}
+  </button>
+)
 
-export function LocaleSwitcher() {
-  return (
-    <ul className="LocaleSwitcher">
-      {Object.keys(locales).map(locale => (
-        <li key={locale}>
-          <button onClick={() => activate(locale)} className="Locale">
-            {locales[locale]}
-          </button>
-        </li>
-      ))}
-    </ul>
-  )
+export const LocaleSwitcher = () => {
+  const { i18n } = useLingui()
+  return createButton(i18n.locale)
 }

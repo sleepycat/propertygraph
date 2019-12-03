@@ -10,7 +10,7 @@ export async function activate(locale) {
   if (process.env.NODE_ENV === 'development') {
     catalog = await import(
       /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `@lingui/loader!./locales/${locale}.po`
+      `@lingui/loader!./locales/${locale}.json`
     )
   } else {
     // for production or test use js:
