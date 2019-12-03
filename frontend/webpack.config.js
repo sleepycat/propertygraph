@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackRootPlugin = require('html-webpack-root-plugin')
+const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { getIfUtils, removeEmpty } = require('webpack-config-utils')
 
 module.exports = ({ mode }) => {
@@ -15,7 +17,12 @@ module.exports = ({ mode }) => {
         'react-dom': '@hot-loader/react-dom',
       }),
     }),
-    plugins: [new HtmlWebpackPlugin(), new HtmlWebpackRootPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin(),
+      new HtmlWebpackRootPlugin(),
+      new HtmlWebpackInlineSVGPlugin(),
+    ],
     devServer: {
       port: 3000,
     },
@@ -30,6 +37,17 @@ module.exports = ({ mode }) => {
               presets: ['@babel/preset-env'],
             },
           },
+        },
+        {
+          test: /\.(png|svg|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                outputPath: 'images',
+              },
+            },
+          ],
         },
       ],
     },
