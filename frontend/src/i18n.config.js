@@ -1,23 +1,14 @@
 import { i18n } from '@lingui/core'
 
-export const locales = {
-  en: 'English',
-  fr: 'Français',
-}
-
 export async function activate(locale) {
   let catalog
-  if (process.env.NODE_ENV === 'production') {
+
+  try {
     catalog = await import(
-      /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `@lingui/loader!./locales/${locale}.js`
+      /* webpackChunkName: "i18n-[index]" */ `@lingui/loader!./locales/${locale}.po`
     )
-  } else {
-    // for production or test use js:
-    catalog = await import(
-      /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `./locales/${locale}.json`
-    )
+  } catch (e) {
+    // this fails only during tests due to webpack errors.
   }
 
   i18n.load(locale, catalog)

@@ -1,13 +1,11 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core'
-import { i18n } from '@lingui/core'
-import { I18nProvider } from '@lingui/react'
 import { Trans, t } from '@lingui/macro'
 import { Header } from './Header'
 import { Footer } from './Footer'
 
 export const App = () => (
-  <I18nProvider i18n={i18n}>
+  <div>
     <section
       css={css`
         font-family: sans;
@@ -32,5 +30,5 @@ export const App = () => (
       </main>
     </section>
     <Footer />
-  </I18nProvider>
+  </div>
 )
