@@ -1,11 +1,11 @@
 module.exports = {
-  locales: ["en", "fr"],
+  locales: ['en', 'fr'],
   catalogs: [
     {
-      path: "src/locales/{locale}",
-      include: ["src"]
-    }
+      path: 'src/locales/{locale}',
+      include: ['src'],
+    },
   ],
-  format: "minimal",
-  sourceLocale: "en"
+  format: 'po',
+  sourceLocale: 'en',
 }

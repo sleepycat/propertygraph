@@ -8,6 +8,7 @@
     "dev": "webpack-dev-server --hot --env.mode=development",
     "start": "serve -l 3000 -s dist",
     "test": "jest",
+    "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "extract": "lingui extract",
     "compile": "lingui compile"
   },
