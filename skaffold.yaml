@@ -1,4 +1,4 @@
-apiVersion: skaffold/v1beta15
+apiVersion: skaffold/v2alpha3
 kind: Config
 metadata:
   name: propertygraph
@@ -18,10 +18,11 @@ build:
       - '**/*.css'
 deploy:
   kustomize:
-    path: platform/overlays/minikube
+    paths:
+    - platform/overlays/minikube
 portForward:
 - resourceType: service
   resourceName: istio-ingressgateway
   namespace: istio-system
   port: 80
-  hostPort: 3000
+  localPort: 3000
