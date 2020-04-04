@@ -5,3 +5,4 @@
 **/*.swo
 **/*.swx
 **/*.js~
+node_modules
