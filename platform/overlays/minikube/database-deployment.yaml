@@ -2,8 +2,12 @@ kind: "ArangoDeployment"
 apiVersion: database.arangodb.com/v1alpha
 metadata:
   name: "arangodb"
+  namespace: api
 spec:
-  image: arangodb/arangodb:3.5.2
+  metadata:
+  annotations:
+    sidecar.istio.io/inject: "true"
+  image: arangodb/arangodb:3.6.2
   environment: Development
   mode: Single
   tls:
@@ -13,3 +17,11 @@ spec:
   bootstrap:
     passwordSecretNames:
       root: arango-root
+  metrics:
+    enabled: true
+  coordinators:
+    count: 1
+  agents:
+    count: 1
+  dbservers:
+    count: 1

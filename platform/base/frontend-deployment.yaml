@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: propertygraph-frontend
+  name: frontend
+  namespace: frontend
 spec:
   selector:
     matchLabels:
-      app: propertygraph-frontend
+      app: frontend
   template:
     metadata:
       labels:
-        app: propertygraph-frontend
+        app: frontend
     spec:
       containers:
-      - name: propertygraph-frontend
+      - name: frontend
         image: gcr.io/propertygraph/frontend
         ports:
         - containerPort: 3000

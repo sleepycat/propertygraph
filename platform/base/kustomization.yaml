@@ -5,9 +5,13 @@ resources:
 - arango-deployment.yaml
 - arango-storage.yaml
 - frontend-deployment.yaml
-- propertygraph-api-deployment.yaml
+- api-deployment.yaml
 - istio-gateway.yaml
 - frontend-virtual-service.yaml
 - api-virtual-service.yaml
-- propertygraph-frontend-service.yaml
-- propertygraph-api-service.yaml
+- frontend-service.yaml
+- api-service.yaml
+- istio.yaml
+- arango-deployment-replication.yaml
+- api-namespace.yaml
+- frontend-namespace.yaml
