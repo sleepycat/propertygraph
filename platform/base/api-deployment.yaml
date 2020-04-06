@@ -3,26 +3,27 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: propertygraph-api
-  name: propertygraph-api
+    app: api
+  name: api
+  namespace: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: propertygraph-api
+      app: api
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: propertygraph-api
+        app: api
     spec:
       containers:
       - image: gcr.io/propertygraph/api
         name: api
         env:
         - name: PROPERTYGRAPH_DB_URL
-          value: http://arangodb:8529
+          value: http://arangodb.api:8529
         - name: PROPERTYGRAPH_DB_PASSWORD
           valueFrom:
             secretKeyRef:
