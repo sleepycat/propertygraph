@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: frontend
   namespace: frontend
+  annotations:
+    sidecar.istio.io/inject: "true"
 spec:
   selector:
     matchLabels:
