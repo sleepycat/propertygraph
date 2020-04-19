@@ -1,4 +1,4 @@
-frontend/build
+frontend/public
 **/node_modules
 **/*.swp
 **/.env
