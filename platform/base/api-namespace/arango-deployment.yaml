@@ -4,10 +4,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: arango-deployment-operator
-  namespace: api
+  namespace: default
   labels:
       app.kubernetes.io/name: kube-arangodb
-      helm.sh/chart: kube-arangodb-1.0.1
+      helm.sh/chart: kube-arangodb-1.0.2
       app.kubernetes.io/managed-by: Tiller
       app.kubernetes.io/instance: deployment
       release: deployment
@@ -17,10 +17,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
     name: arango-deployment-operator-rbac-deployment
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -40,10 +40,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
     name: arango-deployment-operator-rbac-deployment
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -54,17 +54,17 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: arango-deployment-operator
-      namespace: api
+      namespace: default
 ---
 # Source: kube-arangodb/templates/deployment-operator/default-role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
     name: arango-deployment-operator-rbac-default
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -78,10 +78,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
     name: arango-deployment-operator-rbac-deployment
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -103,17 +103,17 @@ rules:
       verbs: ["get", "list", "watch"]
     - apiGroups: ["monitoring.coreos.com"]
       resources: ["servicemonitors"]
-      verbs: ["get", "create", "delete"]
+      verbs: ["get", "create", "delete", "update"]
 ---
 # Source: kube-arangodb/templates/deployment-operator/default-role-binding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
     name: arango-deployment-operator-rbac-default
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -124,17 +124,17 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: default
-      namespace: api
+      namespace: default
 ---
 # Source: kube-arangodb/templates/deployment-operator/role-binding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
     name: arango-deployment-operator-rbac-deployment
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -145,23 +145,23 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: arango-deployment-operator
-      namespace: api
+      namespace: default
 ---
 # Source: kube-arangodb/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: arango-deployment-operator
-  namespace: api
+  namespace: default
   labels:
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.0.1
+    helm.sh/chart: kube-arangodb-1.0.2
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/instance: deployment
     release: deployment
 spec:
   ports:
-    - name: tcp-8529
+    - name: server
       port: 8528
       protocol: TCP
       targetPort: 8528
@@ -178,10 +178,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: arango-deployment-operator
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: deployment
         release: deployment
@@ -200,7 +200,7 @@ spec:
         metadata:
             labels:
                 app.kubernetes.io/name: kube-arangodb
-                helm.sh/chart: kube-arangodb-1.0.1
+                helm.sh/chart: kube-arangodb-1.0.2
                 app.kubernetes.io/managed-by: Tiller
                 app.kubernetes.io/instance: deployment
                 release: deployment
@@ -239,7 +239,7 @@ spec:
             containers:
                 - name: operator
                   imagePullPolicy: Always
-                  image: arangodb/kube-arangodb:1.0.1
+                  image: arangodb/kube-arangodb:1.0.2
                   args:
                     - --operator.deployment
 
@@ -260,7 +260,7 @@ spec:
                       - name: RELATED_IMAGE_UBI
                         value: "alpine:3.11"
                       - name: RELATED_IMAGE_METRICSEXPORTER
-                        value: "arangodb/arangodb-exporter:0.1.6"
+                        value: "arangodb/arangodb-exporter:0.1.7"
                       - name: RELATED_IMAGE_DATABASE
                         value: "arangodb/arangodb:latest"
                   ports:
