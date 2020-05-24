@@ -4,10 +4,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: arango-storage-operator
-  namespace: api
+  namespace: default
   labels:
       app.kubernetes.io/name: kube-arangodb
-      helm.sh/chart: kube-arangodb-1.0.1
+      helm.sh/chart: kube-arangodb-1.0.2
       app.kubernetes.io/managed-by: Tiller
       app.kubernetes.io/instance: storage
       release: storage
@@ -19,7 +19,7 @@ metadata:
     name: arangolocalstorages.storage.arangodb.com
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -40,10 +40,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
     name: arango-storage-operator-rbac-storage
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -69,10 +69,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
     name: arango-storage-operator-rbac-storage
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -83,17 +83,17 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: arango-storage-operator
-      namespace: api
+      namespace: default
 ---
 # Source: kube-arangodb/templates/storage-operator/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
     name: arango-storage-operator-rbac-storage
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -116,10 +116,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
     name: arango-storage-operator-rbac-storage
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -130,17 +130,17 @@ roleRef:
 subjects:
     - kind: ServiceAccount
       name: arango-storage-operator
-      namespace: api
+      namespace: default
 ---
 # Source: kube-arangodb/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: arango-storage-operator
-  namespace: api
+  namespace: default
   labels:
     app.kubernetes.io/name: kube-arangodb
-    helm.sh/chart: kube-arangodb-1.0.1
+    helm.sh/chart: kube-arangodb-1.0.2
     app.kubernetes.io/managed-by: Tiller
     app.kubernetes.io/instance: storage
     release: storage
@@ -163,10 +163,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: arango-storage-operator
-    namespace: api
+    namespace: default
     labels:
         app.kubernetes.io/name: kube-arangodb
-        helm.sh/chart: kube-arangodb-1.0.1
+        helm.sh/chart: kube-arangodb-1.0.2
         app.kubernetes.io/managed-by: Tiller
         app.kubernetes.io/instance: storage
         release: storage
@@ -185,7 +185,7 @@ spec:
         metadata:
             labels:
                 app.kubernetes.io/name: kube-arangodb
-                helm.sh/chart: kube-arangodb-1.0.1
+                helm.sh/chart: kube-arangodb-1.0.2
                 app.kubernetes.io/managed-by: Tiller
                 app.kubernetes.io/instance: storage
                 release: storage
@@ -224,7 +224,7 @@ spec:
             containers:
                 - name: operator
                   imagePullPolicy: Always
-                  image: arangodb/kube-arangodb:1.0.1
+                  image: arangodb/kube-arangodb:1.0.2
                   args:
                     - --operator.storage
 
@@ -245,7 +245,7 @@ spec:
                       - name: RELATED_IMAGE_UBI
                         value: "alpine:3.11"
                       - name: RELATED_IMAGE_METRICSEXPORTER
-                        value: "arangodb/arangodb-exporter:0.1.6"
+                        value: "arangodb/arangodb-exporter:0.1.7"
                       - name: RELATED_IMAGE_DATABASE
                         value: "arangodb/arangodb:latest"
                   ports:
