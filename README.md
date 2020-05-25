@@ -1,3 +1,3 @@
 # Propertygraph
 
-Condo board information management for 2019.
+Condo board information management for 2020.
