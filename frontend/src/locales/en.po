@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/App.js:14
-#~ msgid "Hello from React"
-#~ msgstr "Hello from React"
-
 #: src/App.js:29
 msgid "Welcome to Propertygraph"
 msgstr "Welcome to Propertygraph"
