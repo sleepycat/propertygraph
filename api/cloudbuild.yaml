@@ -24,7 +24,7 @@ steps:
     entrypoint: npm
     args: ['test']
     env:
-      - PROPERTYGRAPH_TEST_DB_URL=$_PROPERTYGRAPH_TEST_DB_URL
+      - PROPERTYGRAPH_DB_URL=$_PROPERTYGRAPH_DB_URL
       - PROPERTYGRAPH_DB_PASSWORD=$_DB_PASSWORD
 
   - name: gcr.io/kaniko-project/executor

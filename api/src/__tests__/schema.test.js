@@ -5,7 +5,7 @@ const { schema } = require('../schema')
 
 const {
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
-  PROPERTYGRAPH_TEST_DB_URL: url,
+  PROPERTYGRAPH_DB_URL: url,
 } = process.env
 
 describe('schema', () => {

@@ -6,7 +6,7 @@ const { makeMigrations } = require('../../migrations')
 
 const {
   PROPERTYGRAPH_DB_PASSWORD: rootPass,
-  PROPERTYGRAPH_TEST_DB_URL: url,
+  PROPERTYGRAPH_DB_URL: url,
 } = process.env
 
 describe('parse server', () => {
