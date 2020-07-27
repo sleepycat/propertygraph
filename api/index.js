@@ -1,3 +1,4 @@
+require('dotenv-safe').config()
 const { ArangoTools } = require('arango-tools')
 const { Server } = require('./src/server')
 const { makeMigrations } = require('./migrations')
